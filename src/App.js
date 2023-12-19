@@ -19,7 +19,7 @@ import AddItem from './pages/AddItem';
 import Analytics from './pages/Analytics';
 import MyOrderUser from './pages/MyOrdersUser';
 import UserHomepage from './pages/UserHomepage';
-import CartTwo from './pages/CartTwo';
+import Cart from './pages/Cart';
 import EditProduct from './pages/EditProduct';
 
 
@@ -85,7 +85,8 @@ function App() {
         setMerchantUsers(data);
         break;
       case 'MerchantQrCode':
-        setMerchantQrCode(data)
+        setMerchantQrCode(data);
+        break;
       default:
         console.log('Unknown State Case')
     }
@@ -146,7 +147,7 @@ function App() {
           <Route path={merchantPageLink ? '/' + merchantPageLink + '/AddItem': undefined} element={ <AddItem setCertainState={setCertainState} merchantDetails={merchantDetails}/> }/>
           <Route path="/Signin" element={<Signin/>}/>
           {
-            merchantProducts.map(product => (
+            merchantProducts?.map(product => (
               <Route
                   key={product.id} // Add a unique key for each route
                   path={`/${merchantDetails.merchantPageLink}/${product.id}`}
@@ -154,7 +155,6 @@ function App() {
                 />
             ))
           }
-          <Route path="/EditProduct" element={<EditProduct/>}/>
           <Route path="/Login" element={<Registration/>} />
           <Route path={"/Profile"} element={<Profile/>} />
           <Route path={merchantPageLink ? '/' + merchantPageLink : undefined} element={<HomepageTwo setCertainState={setCertainState} merchantDetails={merchantDetails} />}/>
@@ -197,7 +197,7 @@ function App() {
               <Route
                 key={merchant.merchantDetails.pageLink} // Add a unique key for each route
                 path={`/stores/${merchant.merchantDetails.pageLink}/Cart`}
-                element={<CartTwo merchantProducts={merchant.products} />}
+                element={<Cart merchantProducts={merchant.products} />}
               />
             ))
             : null // Handle the case when merchants is falsy (e.g., not yet loaded)

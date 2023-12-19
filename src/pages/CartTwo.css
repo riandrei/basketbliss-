@@ -1,8 +1,52 @@
 *{
+  padding:0;
+  margin:0;
+  box-sizing: border-box;
+} 
+
+.main-cart{
+  padding:1.5rem;
+}
+.cart-product{
+  display: flex;
+  gap:1.5rem;
+  padding:.5rem;
+  margin:.5rem 0;
+
+  background-color: #e7e7e7;
+}
+.cart-detail{
+  width:100%;
+  display: flex;
+  gap:1rem;
+  justify-content: space-around;
+  align-items: center;
+}
+.cart-detail h1{
+  color:#474F7B;
+  padding-right: 2rem;
+  border-right: solid 1px #474F7B;
+}
+.cart-product img{
+  width:15vw;
+}
+
+@media(max-width:412px){
+  .cart-product{
+    width:90%;
+  }
+  .product-detail{
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+/* *{
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
   }
-  /*Continue Shopping BG*/
+
   
   .container_navbar{
     display: flex;
@@ -23,7 +67,6 @@
     width: 849px;
   }
   
-  /*Continue Shopping*/
   
   .bow_shoppe{
     position: fixed;
@@ -61,7 +104,7 @@
     line-height: normal;
   }
   
-  /*My Cart*/
+
   .cart_fix{
     display: flex;
     align-items: center;
@@ -84,7 +127,6 @@
     font-weight: 500;
   }
   
-  /* Price, Quality, Total */
   
   .pricing{
     position: absolute;
@@ -104,7 +146,7 @@
     cursor: pointer;
   }
   
-  /* Horizontal line */
+
   .line_horizontal{
     position: absolute;
     left: 3%;
@@ -118,7 +160,7 @@
     z-index: -1;
   }
   
-  /* Dressing */
+
   .cart_needs{
     position: absolute;
     top:40%;
@@ -156,14 +198,13 @@
     width: 43%;
   }
   .price_cart h3{
-    /* color: #DB806D; */
+
     font-family: Poppins;
     font-size: 1.375rem;
     font-style: normal;
     font-weight: 500;
   }
   
-  /* cart two */
   .cart_needs_two{
     position: absolute;
     top:75%;
@@ -182,14 +223,14 @@
     width: 43%;
   }
   .price_cart_two h3{
-    /* color: #DB806D; */
+  
     font-family: Poppins;
     font-size: 1.375rem;
     font-style: normal;
     font-weight: 500;
   }
   
-  /* cart third */
+
   .cart_needs_third{
     position: absolute;
     top:110%;
@@ -208,14 +249,14 @@
     width: 43%;
   }
   .price_cart_third h3{
-    /* color: #DB806D; */
+  
     font-family: Poppins;
     font-size: 1.375rem;
     font-style: normal;
     font-weight: 500;
   }
   
-  /* Horizontal line */
+
   .line_horizontal_two{
     position: absolute;
     left: 60%;
@@ -234,7 +275,7 @@
       display: flex;
       justify-content: space-between;
       width: 34%;
-      /* background-color: aquamarine; */
+     
     }
     .subtotal p{
       color: #DB806D;
@@ -247,7 +288,7 @@
     color: black;
   }
   
-  /* CheckOut btn */
+
   .check_out_btn{
     position: absolute;
     top: 85%;
@@ -269,7 +310,7 @@
     -moz-box-shadow: 10px 9px 0px 1px rgba(219,128,109,1);
   }
   
-  /* Horizontal line */
+  
   .line_horizontal_third{
     position: absolute;
     left: 3%;
@@ -284,7 +325,7 @@
   }
   
   
-  /* CheckOut btn two*/
+  
   .check_out_btn_two{
   position: absolute;
   top: 114%;
@@ -305,3 +346,7 @@
   -webkit-box-shadow: 3px 3px 0 1px rgba(219,128,109,1);
   -moz-box-shadow: 10px 9px 0px 1px rgba(219,128,109,1);
   }
+
+  @media(max-width:412px){
+
+  } */

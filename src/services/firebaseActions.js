@@ -130,15 +130,20 @@ export const signOutUser = () => {
 export const updateMerchantDetails = async (merchantDetails, merchantId) => {
   const merchantRef = doc(db, "merchants", merchantId)
 
-  const randomName = generateRandomFileName() + '.png'; // Assuming you have a function to generate a random file name
+  console.log(merchantDetails.qrCode);
+  console.log(typeof merchantDetails.qrCode)
 
-  const storageRef = ref(storage, `/files/${randomName}`);
-  const res = await uploadBytesResumable(storageRef, merchantDetails.qrCode);
-  
-  // Get the download URL
-  const downloadURL = res.ref.fullPath
-  
-  merchantDetails.qrCode = downloadURL;
+  if(typeof merchantDetails.qrCode != 'string') {
+    const randomName = generateRandomFileName() + '.png'; // Assuming you have a function to generate a random file name
+
+    const storageRef = ref(storage, `/files/${randomName}`);
+    const res = await uploadBytesResumable(storageRef, merchantDetails.qrCode);
+    
+    // Get the download URL
+    const downloadURL = res.ref.fullPath
+    
+    merchantDetails.qrCode = downloadURL;
+  }
 
   return updateDoc(merchantRef, {merchantDetails: merchantDetails}).then((payload) => {
     console.log(payload)
@@ -219,13 +224,6 @@ export const addMerchantProduct = async (product, pictures, merchantId) => {
 };
 
 export const getImageUrl = async (product) => {
-  if(typeof product === 'string') {
-    console.log(product);
-    const imageRef = await ref(storage, product)
-    const res = await getDownloadURL(imageRef)
-
-    return res
-  }
 
   const downloadPromises = await Promise.all(product.pictures.map(async (picture) => {
     const imageRef = ref(storage, picture);
@@ -235,6 +233,13 @@ export const getImageUrl = async (product) => {
   )
   
   return downloadPromises
+}
+
+export const getSingleImageUrl = async (picture) => {
+  const imageRef = ref(storage, picture);
+  const res = await getDownloadURL(imageRef)
+
+  return res
 }
 
 export const addToCart = async (userId, productId, quantity) => {
@@ -266,6 +271,14 @@ export const addToCart = async (userId, productId, quantity) => {
     return false;
   }
 };
+
+export const clearCart = async(userId) => {
+  const userRef = doc(db, "users", userId);
+
+  await updateDoc(userRef, { cart: [] });
+
+  return true;
+}
 
 export const addPageVisits = async (merchantReference) => {
   if(!merchantReference) {
@@ -452,12 +465,16 @@ export const addOrder = async (merchantReference, userId, orderDetails) => {
     return false;
   }
 
+  console.log(merchantReference);
+
   const merchantsCollection = collection(db, 'merchants');
 
   try {
     // Find the merchant based on reference
     const merchantQuery = query(merchantsCollection, where('merchantDetails.reference', '==', merchantReference));
     const merchantSnapshot = await getDocs(merchantQuery);
+
+    console.log(merchantSnapshot.docs);
 
     if (!merchantSnapshot.empty) {
       const merchantDoc = merchantSnapshot.docs[0];
@@ -467,6 +484,8 @@ export const addOrder = async (merchantReference, userId, orderDetails) => {
       const modifiedOrderDetails = {...orderDetails, id, userId}
 
       const merchantProducts = merchantDoc.data().products
+
+      console.log(merchantProducts);
 
       const newMerchantProducts = merchantProducts.map((merchantProduct) => {
         const matchingItem = modifiedOrderDetails.items.find(item => item.productId === merchantProduct.id);
@@ -574,6 +593,53 @@ export const deleteProduct = async (productId, merchantId) => {
     }
   } catch (error) {
     console.error('Error deleting product:', error);
+  }
+};
+
+export const removeProductFromCart = async (userId, productId) => {
+  try {
+    const user = await getUser(userId);
+
+    if (!user || !user.cart) {
+      // User or cart not found
+      return false;
+    }
+
+    const updatedCart = user.cart.filter(item => item.productId !== productId);
+
+    // Update the user document with the modified cart
+    await updateDoc(doc(db, 'users', userId), { cart: updatedCart });
+
+    return true;
+  } catch (error) {
+    console.error('Error removing product from cart:', error);
+    throw error;
+  }
+};
+
+export const editProductQuantityInCart = async (userId, productId, newQuantity) => {
+  try {
+    const user = await getUser(userId);
+
+    if (!user || !user.cart) {
+      // User or cart not found
+      return false;
+    }
+
+    const updatedCart = user.cart.map(item => {
+      if (item.productId === productId) {
+        return { ...item, quantity: newQuantity };
+      }
+      return item;
+    });
+
+    // Update the user document with the modified cart
+    await updateDoc(doc(db, 'users', userId), { cart: updatedCart });
+
+    return true;
+  } catch (error) {
+    console.error('Error editing product quantity in cart:', error);
+    throw error;
   }
 };
 

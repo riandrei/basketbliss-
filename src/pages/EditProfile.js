@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import './EditProfile.css';
 
-import { getImageUrl, getMerchantDetails, updateMerchantDetails } from '../services/firebaseActions';
+import { getSingleImageUrl, getMerchantDetails, updateMerchantDetails } from '../services/firebaseActions';
 import Nav from '../components/Nav';
 import {Link, useNavigate} from 'react-router-dom';
 
@@ -46,7 +46,11 @@ function EditProfile({merchantDetails, setCertainState}) {
     });
 
     modifiedMerchantDetails.pageLink = modifiedMerchantDetails.name
-    modifiedMerchantDetails.qrCode = image;
+
+    if(image) {
+      console.log(image)
+      modifiedMerchantDetails.qrCode = image;
+    }
 
     updateMerchantDetails(modifiedMerchantDetails, merchantId).then(response => {
       if(response) {
@@ -93,7 +97,7 @@ function EditProfile({merchantDetails, setCertainState}) {
   useEffect(() => {
     if(merchantDetails.merchantQrCode) {
       
-      getImageUrl(merchantDetails.merchantQrCode).then((res) => {
+      getSingleImageUrl(merchantDetails.merchantQrCode).then((res) => {
         setSelectedImage(res)
       })
       // setSelectedImage(merchantDetails.merchantQrCode)

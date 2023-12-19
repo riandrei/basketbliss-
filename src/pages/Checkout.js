@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 
-import { getUser, getImageUrl, addOrder } from '../services/firebaseActions'
+import { getUser, getImageUrl, getSingleImageUrl, addOrder } from '../services/firebaseActions'
 
 import './Checkout.css'
 import namepage from '../assets/logobasket.png'
@@ -61,8 +61,11 @@ export const Checkout = ({merchantDetails, merchantProducts}) => {
                 return merchantProduct;
               }
             }));
+
+            console.log(updatedProducts);
     
             setProducts(updatedProducts);
+            
           } catch (error) {
             // Handle errors
             console.error("Error updating products:", error);
@@ -140,6 +143,8 @@ export const Checkout = ({merchantDetails, merchantProducts}) => {
 
       const merchantId = merchantDetails.reference
       const userId = sessionStorage.uid
+
+      console.log(newOrderDetails);
       
       addOrder(merchantId, userId, newOrderDetails).then(res => {
         if(res) {
@@ -153,7 +158,7 @@ export const Checkout = ({merchantDetails, merchantProducts}) => {
     useEffect(() => {
       if(merchantDetails.qrCode) {
     
-        getImageUrl(merchantDetails.qrCode).then((res) => {
+        getSingleImageUrl(merchantDetails.qrCode).then((res) => {
           setImageSrc(res)
         })
         // setSelectedImage(merchantDetails.merchantQrCode)

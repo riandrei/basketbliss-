@@ -24,8 +24,11 @@ function AddItem({setCertainState, merchantDetails}) {
 
   const addProduct = () => {
     const merchantId = sessionStorage.uid
-
-    console.log(variations)
+    
+    if(merchantDetails.merchantQrCode === undefined) {
+      alert('Submit QR First')
+    }
+    
     addMerchantProduct({productName, productStock, productDescription, productPrice, variations, pictures: []}, pictures, merchantId).then((res) => {
       if(res) {
         setProductName('')
@@ -81,27 +84,6 @@ function AddItem({setCertainState, merchantDetails}) {
               <input type="number" value={productPrice} onChange={handleProductPriceChange}/>
             </div>
           </div>
-          <div>
-            <button className="addVariation" onClick={addVariation}>Add variation</button>
-            <div className="variations">
-              {variations.map((variation) => (
-                <div key={variation.id} className="input-variation">
-                  <label>Variation {variation.id}:</label>
-                  <input
-                    type="text"
-                    value={variation.value}
-                    onChange={(e) => {
-                      const updatedVariations = variations.map((v) =>
-                        v.id === variation.id ? { ...v, value: e.target.value } : v
-                      );
-                      setVariations(updatedVariations);
-                    }}
-                  />
-                  <button className="variation-remove" onClick={() => removeVariation(variation.id)}>Remove</button>
-                </div>
-              ))}
-            </div>
-          </div>
           <div className="texarea-container">
             <div className="textarea">
               <label>Product Description:</label>
@@ -113,16 +95,6 @@ function AddItem({setCertainState, merchantDetails}) {
             <input type="file" accept="image/*" onChange={handlePicturesChange} multiple/>
           </div>
           <button className="addProduct" onClick={addProduct}>Add product</button>
-        </div>
-
-        <div className="additem-right">
-          <label>Product picture:</label>
-          <img className="image-main" src={Dress1} />
-          <div className="images-below">
-            <img src={Dress1} />
-            <img src={Dress1} />
-            <img src={Dress1} />
-          </div>
         </div>
       </div>
     </div>
